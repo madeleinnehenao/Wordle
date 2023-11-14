@@ -2,6 +2,8 @@
     para poder instanciar los datos de manera mas rapida, cuándo
     sean necesarios, según la partida"""
 
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 4 letras"""
 class data4:
     def __init__(self,initial_data=None):
         if initial_data is None:
@@ -15,6 +17,8 @@ class data4:
                 self.data.add(palabra)
         
         return self.data
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 5 letras"""
 class data5:
     def __init__(self,initial_data=None):
         if initial_data is None:
@@ -27,7 +31,9 @@ class data5:
                 palabra=linea.strip()
                 self.data.add(palabra)
         return self.data
-
+    
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 6 letras"""
 class data6:
     def __init__(self,initial_data=None):
         if initial_data is None:
@@ -40,7 +46,10 @@ class data6:
                 palabra=linea.strip()
                 self.data.add(palabra)
         
-        print(self.data) 
+        return self.data
+    
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 7 letras"""
 class data7:
     def __init__(self,initial_data=None):
         if initial_data is None:
@@ -53,7 +62,9 @@ class data7:
                 self.data.add(palabra)
         
         return self.data
-
+    
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 8 letras"""
 class data8:
     def __init__(self,initial_data=None):
         if initial_data is None:
