@@ -1,3 +1,7 @@
+"""Cada clase permite leer los archivos .txt de las palabras,
+    para poder instanciar los datos de manera mas rapida, cuándo
+    sean necesarios, según la partida"""
+
 class data4:
     def __init__(self,initial_data=None):
         if initial_data is None:
@@ -55,7 +59,7 @@ class data8:
         if initial_data is None:
             initial_data=set()
         self.data=initial_data  
-        
+
     def words8(self):
         with open("palabras_validas8.txt","r") as archivo:
             for linea in archivo:
