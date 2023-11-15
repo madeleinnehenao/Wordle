@@ -1,11 +1,27 @@
 import random
 import pygame
-from Datos import Data8
+# from Datos import Data8
 
-data_words = Data8()
+# data_words = Data8()
 
-class Wordle6:
+class Wordle8:
+    """
+    Clase para generar un juego de Wordle con 8 Letras. 
+    """
     def __init__(self, width, height, t_margin, b_margin, lr_margin, dict_guessing, dict_answers):
+        
+        """
+        Inicializa una instancia de Wordle8.
+
+        Args:
+            width (int): Ancho de la ventana del juego.
+            height (int): Alto de la ventana del juego.
+            t_margin (int): Margen superior.
+            b_margin (int): Margen inferior.
+            lr_margin (int): Márgenes izquierdo y derecho.
+            dict_guessing (set): Conjunto de palabras para adivinar.
+            dict_answers (set): Conjunto de palabras de respuesta.
+        """
         self.width = width
         self.height = height
         self.t_margin = t_margin
@@ -18,10 +34,14 @@ class Wordle6:
         self.margin = 15
         self.sq_size = (self.width - 4 * self.margin - 2 * self.lr_margin) // 8
         self.input_text = ''
+        # Se utiliza para almacenar los intentos que el jugador realiza durante
+        # el juego para adivinar la palabra objetivo.
         self.guesses = []
+        # Se utiliza para almacenar las letras que no han sido usadas
         self.unguessed = self.alphabet[:]
         self.game_over = False
 
+        # Inicializa el pygame.
         pygame.init()
         pygame.font.init()
         pygame.display.set_caption("Wordle")
@@ -32,40 +52,99 @@ class Wordle6:
 
 
 
-    def determine_unguessed_letters(self):
+    def determine_unguessed_letters(self) -> None:
+        """
+        Determina las letras no adivinadas y actualiza la lista 'unguessed'.
+
+        Esta función se utiliza para actualizar la lista 'unguessed', que contiene
+        las letras del alfabeto que aún no han sido adivinadas por el jugador.
+        
+        Args:
+        None
+
+        Returns:
+        None
+        """
         guessed_letters = ''.join(self.guesses)
         self.unguessed = ''
         for letter in self.alphabet:
             if letter not in guessed_letters:
                 self.unguessed += letter
 
-    def determine_color(self, guess, j):
+    def determine_color(self, guess:str, j:int) -> tuple:
+        """
+        Determina el color del cuadrado según la letra adivinada.
+
+        Esta función determina el color del cuadrado en función de la letra adivinada
+        y su posición con respecto a la respuesta correcta.
+
+        Args:
+            guess (str): La suposición actual del jugador (cadena de letras).
+            j (int): Índice de la letra actual en la suposición.
+
+        Returns:
+            tuple: Tupla que representa el color RGB del cuadrado.
+        """
         letter = guess[j]
+
+        # Si la letra en la suposición coincide con la respuesta en la misma posición, devuelve VERDE
         if letter == self.answer[j]:
-            return (6, 214, 160)  # GREEN
+            return (6, 214, 160)  # Verde 
+
+        # Si la letra está en la respuesta, pero no en la misma posición, comprueba la ocurrencia
         elif letter in self.answer:
+            # Determina cuántas veces aparece la letra adivinada en toda la respuesta. n_target guarda este recuento.
             n_target = self.answer.count(letter)
+            # cantidad de ocurrencias correctas 
             n_correct = 0
+            # cantidad de ocurrencias de la letra en posiciones anteriores a j.
             n_ocurrence = 0
+
+            # Itera para contar las ocurrencias y letras correctas en diferentes posiciones
             for i in range(8):
                 if guess[i] == letter:
+                    # Esto es importante para contar las ocurrencias que ya se han mostrado
+                    #  al jugador en iteraciones anteriores.
                     if i <= j:
                         n_ocurrence += 1
+                    # Comprueba si la letra adivinada (letter) en la posición i
+                    #  coincide con la letra correspondiente en la respuesta
                     if letter == self.answer[i]:
                         n_correct += 1
+            
+            # Si las ocurrencias totales - ocurrencias correctas - ocurrencias ya mostradas son >= 0, devuelve AMARILLO
             if n_target - n_correct - n_ocurrence >= 0:
-                return (255, 209, 102)  # YELLOW
-        return (70, 70, 80)  # GREY
+                return (255, 209, 102)  # Amarillo (255, 209, 102)
+
+        # Si no coincide con ninguna condición anterior, devuelve GRIS
+        return (70, 70, 80)  # Gris (70, 70, 80)
     
-    def show_modal_message(self, message):
+    
+    def show_modal_message(self, message:str,
+                           width:int, height:int,
+                           color:tuple) -> None:
+        """
+        Muestra un mensaje modal en la pantalla del juego.
+
+        Esta función crea un mensaje modal con un mensaje dado y lo muestra en el centro de la pantalla.
+
+        Args:
+            message (str): El mensaje que se mostrará en el modal.
+            width (int): Ancho del mensaje modal.
+            height (int): Alto del mensaje modal.
+            color (tuple): Color de fondo para el modal (formato RGB).
+
+        Returns:
+            None
+        """
         modal_font = pygame.font.SysFont("Arial", 20)
-        modal_width = 300
-        modal_height = 150
+        modal_width = width
+        modal_height = height
 
         modal_surface = pygame.Surface((modal_width, modal_height))
-        modal_surface.fill((167, 204, 177))  # Background color for the modal
+        modal_surface.fill(color)  # Color de fondo para el modal
 
-        text = modal_font.render(message, True, (0, 0, 0))  # Text color: black
+        text = modal_font.render(message, True, (0, 0, 0))  # Color del texto: negro
         text_rect = text.get_rect(center=(modal_width // 2, modal_height // 2))
 
         modal_surface.blit(text, text_rect)
@@ -77,37 +156,26 @@ class Wordle6:
         pygame.display.flip()
 
     
-    def draw_bottom_message(self, message):
-        bottom_message_font = pygame.font.SysFont("Arial", 20)
-        bottom_message_width = 300
-        bottom_message_height = 100
-
-        bottom_message_surface = pygame.Surface((bottom_message_width, bottom_message_height))
-        bottom_message_surface.fill((207, 205, 182))  # Background color for the modal
-
-        text = bottom_message_font.render(message, True, (0, 0, 0))  # Text color: black
-        text_rect = text.get_rect(center=(bottom_message_width // 2, bottom_message_height // 2))
-
-        bottom_message_surface.blit(text, text_rect)
-
-        bottom_message_x = (self.width - bottom_message_width) // 2
-        bottom_message_y = (self.height - bottom_message_height) // 2
-
-        self.screen.blit(bottom_message_surface, (bottom_message_x, bottom_message_y))
-        pygame.display.flip()
-
-
-
     def run_game(self):
+        """
+        Ejecuta el ciclo principal del juego Wordle.
+
+        Este método controla la lógica principal del juego Wordle, gestionando la pantalla,
+        la interacción del usuario y las actualizaciones de los elementos visuales.
+
+        Returns:
+            None
+        """
         
         while self.animating:
             self.screen.fill("white")
 
-            # Draw unguessed letters
+            # Dibuja las letras no adivinadas en la parte superior de la pantalla
             letters = self.font_small.render(self.unguessed, False, (70, 70, 80))
             surface = letters.get_rect(center=(self.width // 2, self.t_margin // 2))
             self.screen.blit(letters, surface)
 
+            # Dibuja la matriz de adivinanzas y letras ingresadas por el usuario
             y = self.t_margin
             for i in range(6):
                 x = self.lr_margin
@@ -115,6 +183,7 @@ class Wordle6:
                     square = pygame.Rect(x, y, self.sq_size, self.sq_size)
                     pygame.draw.rect(self.screen, (70, 70, 80), square, width=2, border_radius=3)
 
+                    # Dibuja las letras adivinadas en la matriz
                     if i < len(self.guesses):
                         color = self.determine_color(self.guesses[i], j)
                         pygame.draw.rect(self.screen, color, square, border_radius=3)
@@ -122,6 +191,7 @@ class Wordle6:
                         surface = letter.get_rect(center=(x + self.sq_size // 2, y + self.sq_size // 2))
                         self.screen.blit(letter, surface)
 
+                    # Dibuja las letras ingresadas por el usuario
                     if i == len(self.guesses) and j < len(self.input_text):
                         letter = self.font.render(self.input_text[j], False, (70, 70, 80))
                         surface = letter.get_rect(center=(x + self.sq_size // 2, y + self.sq_size // 2))
@@ -130,6 +200,7 @@ class Wordle6:
                     x += self.sq_size + self.margin - 7
                 y += self.sq_size + self.margin + 12
 
+            # Muestra la respuesta correcta si el juego termina sin éxito
             if len(self.guesses) == 6 and self.guesses[8] != self.answer:
                 self.game_over = True
                 letters = self.font.render(self.answer, False, (70, 70, 80))
@@ -138,14 +209,17 @@ class Wordle6:
 
             pygame.display.flip()
 
+            # Gestiona la interacción del usuario
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.animating = False
                 elif event.type == pygame.KEYDOWN:
-
+                    
+                    # Elimina la última letra ingresada
                     if event.key == pygame.K_ESCAPE:
                         self.animating = False
 
+                    # Verifica la adivinanza al presionar Enter
                     elif event.key == pygame.K_BACKSPACE:
                         if len(self.input_text) > 0:
                             self.input_text = self.input_text[ : len(self.input_text) - 1]
@@ -153,18 +227,26 @@ class Wordle6:
                     elif event.key == pygame.K_RETURN:
                         if len(self.input_text) == 8:
                             if self.input_text in self.dict_guessing:
+                                # Agrega la adivinanza, actualiza letras no adivinadas y verifica si es la respuesta
                                 self.guesses.append(self.input_text)
                                 self.determine_unguessed_letters()
                                 self.game_over = True if self.input_text == self.answer else False
+                                # Muestra un mensaje modal si se gana el juego
                                 if self.game_over:
-                                    self.show_modal_message("Great, you win!. Press space to restart")
-                                    pygame.time.delay(2000)  # Display the winning message for 2 seconds
-                                    self.game_over = False  # Reset the game-over state
+                                    self.show_modal_message("¡Excelente, has ganado! Presiona espacio para reiniciar",
+                                                            425, 150,
+                                                            (170, 235, 160))
+                                    pygame.time.delay(1500)  # Muestra el mensaje de victoria durante 1.5 segundos
+                                    self.game_over = False  # Reinicia el estado de fin del juego
                                 self.input_text = ""
                             else:
-                                self.draw_bottom_message('The word is not valid')
-                                pygame.time.delay(1000)  # Display the winning message for 2 seconds
-                        
+                                # Muestra un mensaje modal si la palabra no es válida
+                                self.show_modal_message('La palabra no es válida',
+                                                        300, 100,
+                                                        (207, 205, 182))
+                                pygame.time.delay(1000)  # Muestra el mensaje de palabra no válida durante 1 segundo
+
+                    # Reinicia el juego al presionar espacio
                     elif event.key == pygame.K_SPACE:
                         self.game_over = False
                         self.guesses = []
@@ -172,18 +254,19 @@ class Wordle6:
                         self.input_text = ''
                         self.answer = random.choice(list(self.dict_answers))
 
+                    # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
                     elif len(self.input_text) < 8 and not self.game_over:
                         self.input_text += event.unicode.upper()
                     
         pygame.quit()
 
 
-# Constants
-DICT_GUESSING = data_words.words8()
-DICT_ANSWERS = data_words.words8()
+# # Constants
+# DICT_GUESSING = data_words.words8()
+# DICT_ANSWERS = data_words.words8()
 
 
-# Initialize Wordle5 instance
-wordle = Wordle6(600, 700, 70, 70, 70, DICT_GUESSING, DICT_ANSWERS)
-print(wordle.answer)
-wordle.run_game()
+# # Initialize Wordle5 instance
+# wordle = Wordle8(600, 700, 70, 70, 70, DICT_GUESSING, DICT_ANSWERS)
+# print(wordle.answer)
+# wordle.run_game()

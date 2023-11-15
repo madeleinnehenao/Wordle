@@ -1,5 +1,10 @@
 import pygame
 import sys
+from Wordle4 import *
+from Wordle5 import *
+from Wordle6 import *
+from Wordle7 import *
+from Wordle8 import *
 
 
 # Initialize Pygame

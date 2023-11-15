@@ -6,7 +6,7 @@ data_words = Data5()
 
 class Wordle5:
     """
-    Clase para generar un juego de Wordle con 5 Palabras. 
+    Clase para generar un juego de Wordle con 5 Letras. 
     """
     def __init__(self, width, height, t_margin, b_margin, lr_margin, dict_guessing, dict_answers):
 
@@ -90,7 +90,7 @@ class Wordle5:
 
         # Si la letra en la suposición coincide con la respuesta en la misma posición, devuelve VERDE
         if letter == self.answer[j]:
-            return (6, 214, 160)  # Verde (6, 214, 160)
+            return (6, 214, 160)  # Verde 
 
         # Si la letra está en la respuesta, pero no en la misma posición, comprueba la ocurrencia
         elif letter in self.answer:
@@ -235,7 +235,7 @@ class Wordle5:
                                     self.show_modal_message("¡Excelente, has ganado! Presiona espacio para reiniciar",
                                                             425, 150,
                                                             (170, 235, 160))
-                                    pygame.time.delay(2000)  # Muestra el mensaje de victoria durante 2 segundos
+                                    pygame.time.delay(1500)  # Muestra el mensaje de victoria durante 1.5 segundos
                                     self.game_over = False  # Reinicia el estado de fin del juego
                                 self.input_text = ""
                             else:
@@ -261,12 +261,12 @@ class Wordle5:
 
 
 
-# Constants
-DICT_GUESSING = data_words.words5()
-DICT_ANSWERS = data_words.words5()
+# # Constants
+# DICT_GUESSING = data_words.words5()
+# DICT_ANSWERS = data_words.words5()
 
 
-# Initialize Wordle5 instance
-wordle = Wordle5(600, 700, 100, 100, 100, DICT_GUESSING, DICT_ANSWERS)
-print(wordle.answer)
-wordle.run_game()
+# # Initialize Wordle5 instance
+# wordle = Wordle5(600, 700, 100, 100, 100, DICT_GUESSING, DICT_ANSWERS)
+# print(wordle.answer)
+# wordle.run_game()
