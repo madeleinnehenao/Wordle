@@ -118,7 +118,7 @@ while ANIMATING:
 
             x += SQ_SIZE + MARGIN
         y += SQ_SIZE + MARGIN
-    # Show the correct anser after a game over
+    # Show the correct answer after a game over
     if len(GUESSES) == 6 and GUESSES[5] != ANSWER:
         GAME_OVER = True
         letters = FONT.render(ANSWER, False, GREY)

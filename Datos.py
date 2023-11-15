@@ -1,8 +1,10 @@
-"""Cada clase permite leer los archivos .txt de las palabras,
-    para poder instanciar los datos de manera mas rapida, cuándo
-    sean necesarios, según la partida"""
+"""
+Cada clase permite leer los archivos .txt de las palabras,
+para poder instanciar los datos de manera mas rapida, cuándo
+sean necesarios, según la partida
+"""
 
-class data4:
+class Data4:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -15,7 +17,7 @@ class data4:
                 self.data.add(palabra)
         
         return self.data
-class data5:
+class Data5:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -28,7 +30,7 @@ class data5:
                 self.data.add(palabra)
         return self.data
 
-class data6:
+class Data6:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -41,7 +43,7 @@ class data6:
                 self.data.add(palabra)
         
         print(self.data) 
-class data7:
+class Data7:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -54,7 +56,7 @@ class data7:
         
         return self.data
 
-class data8:
+class Data8:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
