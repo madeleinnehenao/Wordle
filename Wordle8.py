@@ -170,7 +170,7 @@ class Wordle6:
                         self.guesses = []
                         self.unguessed = self.alphabet
                         self.input_text = ''
-                        self.answer = random.choice(self.dict_answers)
+                        self.answer = random.choice(list(self.dict_answers))
 
                     elif len(self.input_text) < 8 and not self.game_over:
                         self.input_text += event.unicode.upper()
