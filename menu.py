@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+
 # Initialize Pygame
 pygame.init()
 
@@ -33,14 +34,14 @@ def main_menu():
     while True:
         screen.fill(WHITE)
         
-        draw_text("Wordle-like Game", FONT, BLACK, 280, 50)
+        draw_text("Wordle-like Game", FONT, BLACK, 200, 50)
         
         # Draw buttons for word lengths
-        draw_button("4-Letter Wordle", 300, 150, 200, 50, GREY, "")
-        draw_button("5-Letter Wordle", 300, 225, 200, 50, GREY, "")
-        draw_button("6-Letter Wordle", 300, 300, 200, 50, GREY, "")
-        draw_button("7-Letter Wordle", 300, 375, 200, 50, GREY, "")
-        draw_button("8-Letter Wordle", 300, 450, 200, 50, GREY, "")
+        draw_button("4-Letter Wordle", 200, 150, 200, 50, GREY, "")
+        draw_button("5-Letter Wordle", 200, 225, 200, 50, GREY, "")
+        draw_button("6-Letter Wordle", 200, 300, 200, 50, GREY, "")
+        draw_button("7-Letter Wordle", 200, 375, 200, 50, GREY, "")
+        draw_button("8-Letter Wordle", 200, 450, 200, 50, GREY, "")
         
         # Update the display
         pygame.display.update()

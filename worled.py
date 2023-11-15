@@ -151,6 +151,7 @@ while ANIMATING:
                 if len(INPUT) == 5 and INPUT in DICT_GUESSING:
                     GUESSES.append(INPUT)
                     UNGUESSED = determine_unguessed_letters(GUESSES)
+                    # TODO: Estadisticas
                     GAME_OVER = True if INPUT == ANSWER else False
                     INPUT = ""
 

@@ -42,7 +42,7 @@ class Data6:
                 palabra=linea.strip()
                 self.data.add(palabra)
         
-        print(self.data) 
+        return self.data
 class Data7:
     def __init__(self,initial_data=None):
         if initial_data is None:
