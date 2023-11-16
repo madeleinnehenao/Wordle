@@ -1,8 +1,5 @@
 import random
 import pygame
-from Datos import Data8
-
-data_words = Data8()
 
 class Wordle8:
     """
@@ -44,10 +41,6 @@ class Wordle8:
         #Contadores de aciertos y fallas
         self.aciertos=0
         self.fallos=0
-        self.game_lost = False
-        #Contadores de aciertos y fallas
-        self.aciertos=0
-        self.fallos=0
 
         # Inicializa el pygame.
         pygame.font.init()
@@ -68,9 +61,32 @@ class Wordle8:
         """
         Draws a button to close the game in the upper left corner.
         """
-        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 50, 25))
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 50, 25),
+                         border_radius = 3)
         close_text = self.font_small.render("Close", True, (255, 255, 255))
         self.screen.blit(close_text, (15, 15))
+
+
+    def draw_aciertos(self) -> None:
+        """
+        Dibuja un recuadro al fondo de la pantalla con la cantidad de aciertos.
+        """
+
+        pygame.draw.rect(self.screen, (6, 214, 160), pygame.Rect(160, 670, 120, 30),
+                         border_radius= 3)
+        fallos_text = self.font_small.render(f"Aciertos: {self.aciertos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (180, 675))
+
+
+    def draw_fallos(self) -> None:
+        """
+        Dibuja un recuadro al fondo de la pantalla con la cantidad de fallos.
+        """
+
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(300, 670, 120, 30),
+                         border_radius=3)
+        fallos_text = self.font_small.render(f"Fallos: {self.fallos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (320, 675))
 
 
     def determine_unguessed_letters(self) -> None:
@@ -111,9 +127,7 @@ class Wordle8:
 
         # Si la letra en la suposición coincide con la respuesta en la misma posición, devuelve VERDE
         if letter == self.answer[j]:
-
             return (6, 214, 160)  # Verde 
-        
 
         # Si la letra está en la respuesta, pero no en la misma posición, comprueba la ocurrencia
         elif letter in self.answer:
@@ -142,8 +156,8 @@ class Wordle8:
 
         # Si no coincide con ninguna condición anterior, devuelve GRIS
         return (70, 70, 80)  # Gris (70, 70, 80)
-        
-   
+    
+    
     def show_modal_message(self, message:str,
                            width:int, height:int,
                            color:tuple) -> None:
@@ -178,6 +192,7 @@ class Wordle8:
 
         self.screen.blit(modal_surface, (modal_x, modal_y))
         pygame.display.flip()
+
     
     def run_game(self):
         """
@@ -231,9 +246,14 @@ class Wordle8:
                 letters = self.font.render(self.answer, False, (70, 70, 80))
                 surface = letters.get_rect(center=(self.width // 2, 600))
                 self.screen.blit(letters, surface)
+                
+            # Si el jugador no adivina la palabra en sus intentos, se suman los fallos
+            if len(self.guesses)==6 and self.guesses[5] != self.answer and not self.game_lost:
+                self.fallos+=1
+                self.game_lost = True
 
             pygame.display.flip()
-           
+
             # Gestiona la interacción del usuario
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -261,6 +281,8 @@ class Wordle8:
                                     self.show_modal_message("¡Excelente, has ganado! Presiona espacio para reiniciar",
                                                             425, 150,
                                                             (170, 235, 160))
+                                    # En cuanto gane aumento el contador de victorias
+                                    self.aciertos += 1
                                     pygame.time.delay(1500)  # Muestra el mensaje de victoria durante 1.5 segundos
                                     self.game_over = False  # Reinicia el estado de fin del juego
                                 self.input_text = ""
@@ -283,10 +305,8 @@ class Wordle8:
                     # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
                     elif len(self.input_text) < 8 and not self.game_over:
                         self.input_text += event.unicode.upper()
-                        
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:  # Verifica si se hizo clic con el botón izquierdo del ratón
                         if pygame.Rect(10, 10, 50, 30).collidepoint(event.pos):
                             self.close_game()  # Cierra el juego al hacer clic en el botón
-            print(self.guesses)
-            print(self.answer)
