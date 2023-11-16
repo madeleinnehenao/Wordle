@@ -1,8 +1,5 @@
 import random
 import pygame
-from Datos import Data6
-
-data_words = Data6()
 
 class Wordle6:
     """
@@ -50,6 +47,19 @@ class Wordle6:
         self.animating = True
 
 
+    def close_game(self):
+        """
+        Function to close the game.
+        """
+        self.animating = False
+
+    def draw_close_button(self):
+        """
+        Draws a button to close the game in the upper left corner.
+        """
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 65, 30))
+        close_text = self.font_small.render("Close", True, (255, 255, 255))
+        self.screen.blit(close_text, (15, 15))
 
     def determine_unguessed_letters(self) -> None:
         """
@@ -167,6 +177,7 @@ class Wordle6:
         """
         while self.animating:
             self.screen.fill("white")
+            self.draw_close_button()
 
             # Dibuja las letras no adivinadas en la parte superior de la pantalla
             letters = self.font_small.render(self.unguessed, False, (70, 70, 80))
@@ -255,16 +266,9 @@ class Wordle6:
                     # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
                     elif len(self.input_text) < 6 and not self.game_over:
                         self.input_text += event.unicode.upper()
+                
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  # Verifica si se hizo clic con el botón izquierdo del ratón
+                        if pygame.Rect(10, 10, 50, 30).collidepoint(event.pos):
+                            self.close_game()  # Cierra el juego al hacer clic en el botón
                     
-        pygame.quit()
-
-
-# # Constants
-# DICT_GUESSING = data_words.words6()
-# DICT_ANSWERS = data_words.words6()
-
-
-# # Initialize Wordle5 instance
-# wordle = Wordle6(600, 700, 80, 80, 80, DICT_GUESSING, DICT_ANSWERS)
-# print(wordle.answer)
-# wordle.run_game()

@@ -1,8 +1,5 @@
 import random
 import pygame
-from Datos import Data4
-
-data_words = Data4()
 
 class Wordle4:
     """
@@ -41,7 +38,6 @@ class Wordle4:
         self.game_over = False
 
         # Inicializa el pygame.
-        pygame.init()
         pygame.font.init()
         pygame.display.set_caption("Wordle")
         self.font = pygame.font.SysFont("free sans bold", self.sq_size)
@@ -50,6 +46,19 @@ class Wordle4:
         self.animating = True
 
 
+    def close_game(self):
+        """
+        Function to close the game.
+        """
+        self.animating = False
+
+    def draw_close_button(self):
+        """
+        Draws a button to close the game in the upper left corner.
+        """
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 73, 35))
+        close_text = self.font_small.render("Close", True, (255, 255, 255))
+        self.screen.blit(close_text, (15, 15))
 
     def determine_unguessed_letters(self) -> None:
         """
@@ -168,6 +177,7 @@ class Wordle4:
         """
         while self.animating:
             self.screen.fill("white")
+            self.draw_close_button()  # Dibuja el botón de cierre
 
             # Dibuja las letras no adivinadas en la parte superior de la pantalla
             letters = self.font_small.render(self.unguessed, False, (70, 70, 80))
@@ -245,8 +255,7 @@ class Wordle4:
                                                         300, 100,
                                                        (207, 205, 182))
                                 pygame.time.delay(1000)  # Muestra el mensaje de palabra no válida durante 1 segundo
-                        
-                                    
+                                  
                     # Reinicia el juego al presionar espacio
                     elif event.key == pygame.K_SPACE:
                         self.game_over = False
@@ -255,18 +264,11 @@ class Wordle4:
                         self.input_text = ''
                         self.answer = random.choice(list(self.dict_answers))
                     # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
+
                     elif len(self.input_text) < 4 and not self.game_over:
                         self.input_text += event.unicode.upper()
-                    
-        pygame.quit()
 
-
-# Constants
-# DICT_GUESSING = data_words.words4()
-# DICT_ANSWERS = data_words.words4()
-
-
-# Initialize Wordle5 instance
-# wordle = Wordle4(600, 700, 100, 100, 100, DICT_GUESSING, DICT_ANSWERS)
-# print(wordle.answer)
-# wordle.run_game()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  # Verifica si se hizo clic con el botón izquierdo del ratón
+                        if pygame.Rect(10, 10, 50, 30).collidepoint(event.pos):
+                            self.close_game()  # Cierra el juego al hacer clic en el botón

@@ -1,8 +1,5 @@
 import random
 import pygame
-from Datos import Data8
-
-# data_words = Data8()
 
 class Wordle8:
     """
@@ -60,7 +57,7 @@ class Wordle8:
         """
         Draws a button to close the game in the upper left corner.
         """
-        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 50, 30))
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 50, 25))
         close_text = self.font_small.render("Close", True, (255, 255, 255))
         self.screen.blit(close_text, (15, 15))
 
@@ -271,20 +268,8 @@ class Wordle8:
                     # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
                     elif len(self.input_text) < 8 and not self.game_over:
                         self.input_text += event.unicode.upper()
-                        
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:  # Verifica si se hizo clic con el botón izquierdo del ratón
                         if pygame.Rect(10, 10, 50, 30).collidepoint(event.pos):
                             self.close_game()  # Cierra el juego al hacer clic en el botón
-        # pygame.quit()
-
-
-# # Constants
-# DICT_GUESSING = data_words.words8()
-# DICT_ANSWERS = data_words.words8()
-
-
-# # Initialize Wordle5 instance
-# wordle = Wordle8(600, 700, 70, 70, 70, DICT_GUESSING, DICT_ANSWERS)
-# print(wordle.answer)
-# wordle.run_game()

@@ -5,6 +5,48 @@ from Wordle5 import *
 from Wordle6 import *
 from Wordle7 import *
 from Wordle8 import *
+from Datos import *
+
+# Constantes para el wordle 4
+data_words_4 = Data4()
+# Constantes para los diccionarios
+DICT_GUESSING_4 = data_words_4.words4()
+DICT_ANSWERS_4 = data_words_4.words4()
+# Initialize Wordle5 instance
+wordle_4 = Wordle4(600, 700, 100, 100, 100, DICT_GUESSING_4, DICT_ANSWERS_4)
+
+# Constantes para el wordle 5
+data_words_5 = Data5()
+# Constantes para los diccionarios
+DICT_GUESSING_5 = data_words_5.words5()
+DICT_ANSWERS_5 = data_words_5.words5()
+# Initialize Wordle5 instance
+wordle_5 = Wordle5(600, 700, 100, 100, 100, DICT_GUESSING_5, DICT_ANSWERS_5)
+
+# Constantes para el wordle 6
+data_words_6 = Data6()
+# Constantes para los diccionarios
+DICT_GUESSING_6 = data_words_6.words6()
+DICT_ANSWERS_6 = data_words_6.words6()
+# Initialize Wordle5 instance
+wordle_6 = Wordle6(600, 700, 100, 100, 100, DICT_GUESSING_6, DICT_ANSWERS_6)
+
+# Constantes para el wordle 7
+data_words_7 = Data7()
+# Constantes para los diccionarios
+DICT_GUESSING_7 = data_words_7.words7()
+DICT_ANSWERS_7 = data_words_7.words7()
+# Initialize Wordle5 instance
+wordle_7 = Wordle7(600, 700, 100, 100, 100, DICT_GUESSING_7, DICT_ANSWERS_7)
+
+# Constantes para el wordle 8
+data_words_8 = Data8()
+# Constantes para los diccionarios
+DICT_GUESSING_8 = data_words_8.words8()
+DICT_ANSWERS_8 = data_words_8.words8()
+# Initialize Wordle5 instance
+wordle_8 = Wordle8(600, 700, 100, 100, 100, DICT_GUESSING_8, DICT_ANSWERS_8)
+
 
 
 # Initialize Pygame
@@ -58,26 +100,23 @@ def main_menu():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if 300 <= mouse_pos[0] <= 500:
+                if 200 <= mouse_pos[0] <= 400:
                     if 150 <= mouse_pos[1] <= 200:
-                        # Start 4-letter wordle game
-                        print("Starting 4-letter wordle game")
-                        # Add your code here to start the game with 4-letter words
+                        wordle_4.run_game()
+                        wordle_4.animating = True
                     elif 225 <= mouse_pos[1] <= 275:
-                        # Start 5-letter wordle game
-                        print("Starting 5-letter wordle game")
-                        # Add your code here to start the game with 5-letter words
+                        wordle_5.run_game()
+                        wordle_5.animating = True
                     elif 300 <= mouse_pos[1] <= 350:
-                        # Start 6-letter wordle game
-                        print("Starting 6-letter wordle game")
-                        # Add your code here to start the game with 6-letter words
+                        wordle_6.run_game()
+                        wordle_6.animating = True
                     elif 375 <= mouse_pos[1] <= 425:
-                        # Start 7-letter wordle game
-                        print("Starting 7-letter wordle game")
-                        # Add your code here to start the game with 7-letter words
+                        wordle_7.run_game()
+                        wordle_7.animating = True
                     elif 450 <= mouse_pos[1] <= 500:
                         # Start 8-letter wordle game
-                        print("Starting 8-letter wordle game")
+                        wordle_8.run_game()
+                        wordle_8.animating = True
                         # Add your code here to start the game with 8-letter words
 
 # Run the main menu loop
