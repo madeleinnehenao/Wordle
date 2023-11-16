@@ -210,7 +210,7 @@ class Wordle6:
                 y += self.sq_size + self.margin + 10
             
             # Muestra la respuesta correcta si el juego termina sin éxito
-            if len(self.guesses) == 6 and self.guesses[6] != self.answer:
+            if len(self.guesses) == 6 and self.guesses[5] != self.answer:
                 self.game_over = True
                 letters = self.font.render(self.answer, False, (70, 70, 80))
                 surface = letters.get_rect(center=(self.width // 2, self.height - self.b_margin // 2 - self.margin))

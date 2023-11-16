@@ -212,7 +212,7 @@ class Wordle8:
                 y += self.sq_size + self.margin + 12
 
             # Muestra la respuesta correcta si el juego termina sin éxito
-            if len(self.guesses) == 6 and self.guesses[8] != self.answer:
+            if len(self.guesses) == 6 and self.guesses[5] != self.answer:
                 self.game_over = True
                 letters = self.font.render(self.answer, False, (70, 70, 80))
                 surface = letters.get_rect(center=(self.width // 2, self.height - self.b_margin // 2 - self.margin))
@@ -273,3 +273,5 @@ class Wordle8:
                     if event.button == 1:  # Verifica si se hizo clic con el botón izquierdo del ratón
                         if pygame.Rect(10, 10, 50, 30).collidepoint(event.pos):
                             self.close_game()  # Cierra el juego al hacer clic en el botón
+            print(self.guesses)
+            print(self.answer)
