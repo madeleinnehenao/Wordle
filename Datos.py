@@ -1,10 +1,11 @@
-"""Cada clase permite leer los archivos .txt de las palabras,
-    para poder instanciar los datos de manera mas rapida, cuándo
-    sean necesarios, según la partida"""
-
+"""
+Cada clase permite leer los archivos .txt de las palabras,
+para poder instanciar los datos de manera mas rapida, cuándo
+sean necesarios, según la partida
+"""
+class Data4:
 """clase para manejar los datos de las partidas que tienen palabras
                     de un rango de 4 letras"""
-class data4:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -17,9 +18,9 @@ class data4:
                 self.data.add(palabra)
         
         return self.data
+class Data5:
 """clase para manejar los datos de las partidas que tienen palabras
                     de un rango de 5 letras"""
-class data5:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -31,10 +32,10 @@ class data5:
                 palabra=linea.strip()
                 self.data.add(palabra)
         return self.data
-    
+
+class Data6:
 """clase para manejar los datos de las partidas que tienen palabras
                     de un rango de 6 letras"""
-class data6:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -47,10 +48,10 @@ class data6:
                 self.data.add(palabra)
         
         return self.data
-    
+
+class Data7:
 """clase para manejar los datos de las partidas que tienen palabras
                     de un rango de 7 letras"""
-class data7:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -62,10 +63,10 @@ class data7:
                 self.data.add(palabra)
         
         return self.data
-    
+
+class Data8:  
 """clase para manejar los datos de las partidas que tienen palabras
                     de un rango de 8 letras"""
-class data8:
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
