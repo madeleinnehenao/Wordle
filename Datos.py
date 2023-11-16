@@ -3,8 +3,9 @@ Cada clase permite leer los archivos .txt de las palabras,
 para poder instanciar los datos de manera mas rapida, cuándo
 sean necesarios, según la partida
 """
-
 class Data4:
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 4 letras"""
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -18,6 +19,8 @@ class Data4:
         
         return self.data
 class Data5:
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 5 letras"""
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -31,6 +34,8 @@ class Data5:
         return self.data
 
 class Data6:
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 6 letras"""
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -43,7 +48,10 @@ class Data6:
                 self.data.add(palabra)
         
         return self.data
+
 class Data7:
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 7 letras"""
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
@@ -56,7 +64,9 @@ class Data7:
         
         return self.data
 
-class Data8:
+class Data8:  
+"""clase para manejar los datos de las partidas que tienen palabras
+                    de un rango de 8 letras"""
     def __init__(self,initial_data=None):
         if initial_data is None:
             initial_data=set()
