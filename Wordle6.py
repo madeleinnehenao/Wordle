@@ -36,16 +36,18 @@ class Wordle6:
         # Se utiliza para almacenar las letras que no han sido usadas
         self.unguessed = self.alphabet[:]
         self.game_over = False
+        self.game_lost = False
+        #Contadores de aciertos y fallas
+        self.aciertos=0
+        self.fallos=0
 
         # Inicializa el pygame.
-        pygame.init()
         pygame.font.init()
         pygame.display.set_caption("Wordle")
         self.font = pygame.font.SysFont("free sans bold", self.sq_size)
         self.font_small = pygame.font.SysFont("free sans bold", self.sq_size // 2)
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.animating = True
-
 
     def close_game(self):
         """
@@ -57,9 +59,33 @@ class Wordle6:
         """
         Draws a button to close the game in the upper left corner.
         """
-        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 65, 30))
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 65, 30),
+                         border_radius = 3)
         close_text = self.font_small.render("Close", True, (255, 255, 255))
         self.screen.blit(close_text, (15, 15))
+
+
+    def draw_aciertos(self) -> None:
+        """
+        Dibuja un recuadro al fondo de la pantalla con la cantidad de aciertos.
+        """
+
+        pygame.draw.rect(self.screen, (6, 214, 160), pygame.Rect(170, 670, 120, 30),
+                         border_radius= 3)
+        fallos_text = self.font_small.render(f"Aciertos: {self.aciertos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (180, 675))
+
+
+    def draw_fallos(self) -> None:
+        """
+        Dibuja un recuadro al fondo de la pantalla con la cantidad de fallos.
+        """
+
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(300, 670, 120, 30),
+                         border_radius=3)
+        fallos_text = self.font_small.render(f"Fallos: {self.fallos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (320, 675))
+
 
     def determine_unguessed_letters(self) -> None:
         """
@@ -178,6 +204,8 @@ class Wordle6:
         while self.animating:
             self.screen.fill("white")
             self.draw_close_button()
+            self.draw_aciertos()
+            self.draw_fallos()
 
             # Dibuja las letras no adivinadas en la parte superior de la pantalla
             letters = self.font_small.render(self.unguessed, False, (70, 70, 80))
@@ -215,6 +243,11 @@ class Wordle6:
                 letters = self.font.render(self.answer, False, (70, 70, 80))
                 surface = letters.get_rect(center=(self.width // 2, self.height - self.b_margin // 2 - self.margin))
                 self.screen.blit(letters, surface)
+            
+            # Si el jugador no adivina la palabra en sus intentos, se suman los fallos
+            if len(self.guesses)==6 and self.guesses[5] != self.answer and not self.game_lost:
+                self.fallos+=1
+                self.game_lost = True
 
             pygame.display.flip()
 
@@ -246,6 +279,8 @@ class Wordle6:
                                     self.show_modal_message("¡Excelente, has ganado! Presiona espacio para reiniciar",
                                                             425, 150,
                                                             (170, 235, 160))
+                                    # En cuanto gane aumento el contador de victorias
+                                    self.aciertos += 1
                                     pygame.time.delay(1500)  # Muestra el mensaje de victoria durante 2 segundos
                                     self.game_over = False  # Reinicia el estado de fin del juego
                                 self.input_text = ""
@@ -263,6 +298,8 @@ class Wordle6:
                         self.unguessed = self.alphabet
                         self.input_text = ''
                         self.answer = random.choice(list(self.dict_answers))
+                        self.game_lost = False
+
                     # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
                     elif len(self.input_text) < 6 and not self.game_over:
                         self.input_text += event.unicode.upper()

@@ -41,13 +41,17 @@ class Wordle5:
         # Se utiliza para almacenar las letras que no han sido usadas
         self.unguessed = self.alphabet[:]
         self.game_over = False
+        self.game_lost = False
+        #Contadores de aciertos y fallas
+        self.aciertos=0
+        self.fallos=0
 
         # Inicializa el pygame.
         pygame.init()
         pygame.font.init()
         pygame.display.set_caption("Wordle")
         self.font = pygame.font.SysFont("free sans bold", self.sq_size)
-        self.font_small = pygame.font.SysFont("free sans bold", self.sq_size // 2)
+        self.font_small = pygame.font.SysFont("free sans bold", self.sq_size // 3)
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.animating = True
 
@@ -58,13 +62,38 @@ class Wordle5:
         """
         self.animating = False
 
+
     def draw_close_button(self):
         """
         Draws a button to close the game in the upper left corner.
         """
-        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 73, 30))
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 65, 25),
+                          border_radius= 3)
         close_text = self.font_small.render("Close", True, (255, 255, 255))
         self.screen.blit(close_text, (15, 15))
+
+
+    def draw_aciertos(self) -> None:
+        """
+        Dibuja un recuadro al fondo de la pantalla con la cantidad de aciertos.
+        """
+
+        pygame.draw.rect(self.screen, (6, 214, 160), pygame.Rect(170, 670, 120, 30),
+                         border_radius= 3)
+        fallos_text = self.font_small.render(f"Aciertos: {self.aciertos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (180, 675))
+
+
+    def draw_fallos(self) -> None:
+        """
+        Dibuja un recuadro al fondo de la pantalla con la cantidad de fallos.
+        """
+
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(300, 670, 120, 30),
+                         border_radius=3)
+        fallos_text = self.font_small.render(f"Fallos: {self.fallos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (320, 675))
+
 
     def determine_unguessed_letters(self) -> None:
         """
@@ -84,6 +113,7 @@ class Wordle5:
         for letter in self.alphabet:
             if letter not in guessed_letters:
                 self.unguessed += letter
+
 
     def determine_color(self, guess:str, j:int) -> tuple:
         """
@@ -133,6 +163,7 @@ class Wordle5:
         # Si no coincide con ninguna condición anterior, devuelve GRIS
         return (70, 70, 80)  # Gris (70, 70, 80)
     
+
     def show_modal_message(self, message:str,
                            width:int, height:int,
                            color:tuple) -> None:
@@ -182,6 +213,8 @@ class Wordle5:
         while self.animating:
             self.screen.fill("white")
             self.draw_close_button()  # Dibuja el botón de cierre
+            self.draw_aciertos()
+            self.draw_fallos()
 
             # Dibuja las letras no adivinadas en la parte superior de la pantalla
             letters = self.font_small.render(self.unguessed, False, (70, 70, 80))
@@ -220,6 +253,11 @@ class Wordle5:
                 surface = letters.get_rect(center=(self.width // 2, self.height - self.b_margin // 2 - self.margin))
                 self.screen.blit(letters, surface)
 
+            # Si el jugador no adivina la palabra en sus intentos, se suman los fallos
+            if len(self.guesses)==6 and self.guesses[5] != self.answer and not self.game_lost:
+                self.fallos += 1
+                self.game_lost = True
+
             pygame.display.flip()
 
             # Gestiona la interacción del usuario
@@ -249,6 +287,8 @@ class Wordle5:
                                     self.show_modal_message("¡Excelente, has ganado! Presiona espacio para reiniciar",
                                                             425, 150,
                                                             (170, 235, 160))
+                                    # En cuanto gane aumento el contador de victorias
+                                    self.aciertos += 1
                                     pygame.time.delay(1500)  # Muestra el mensaje de victoria durante 1.5 segundos
                                     self.game_over = False  # Reinicia el estado de fin del juego
                                 self.input_text = ""
@@ -266,6 +306,7 @@ class Wordle5:
                         self.unguessed = self.alphabet
                         self.input_text = ''
                         self.answer = random.choice(list(self.dict_answers))
+                        self.game_lost = False
 
                     # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
                     elif len(self.input_text) < 5 and not self.game_over:

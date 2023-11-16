@@ -36,9 +36,12 @@ class Wordle7:
         # Se utiliza para almacenar las letras que no han sido usadas
         self.unguessed = self.alphabet[:]
         self.game_over = False
+        self.game_lost = False
+        #Contadores de aciertos y fallas
+        self.aciertos=0
+        self.fallos=0
 
         # Inicializa el pygame.
-        pygame.init()
         pygame.font.init()
         pygame.display.set_caption("Wordle")
         self.font = pygame.font.SysFont("free sans bold", self.sq_size)
@@ -47,20 +50,41 @@ class Wordle7:
         self.animating = True
 
 
-
     def close_game(self):
         """
         Function to close the game.
         """
         self.animating = False
 
+
     def draw_close_button(self):
         """
         Draws a button to close the game in the upper left corner.
         """
-        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 60, 25))
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(10, 10, 55, 25),
+                         border_radius = 3)
         close_text = self.font_small.render("Close", True, (255, 255, 255))
         self.screen.blit(close_text, (15, 15))
+
+
+    def draw_aciertos(self) -> None:
+        """
+        Dibuja un recuadro al fondo de la pantalla con la cantidad de aciertos.
+        """
+
+        pygame.draw.rect(self.screen, (6, 214, 160), pygame.Rect(160, 670, 120, 30),
+                         border_radius= 3)
+        fallos_text = self.font_small.render(f"Aciertos: {self.aciertos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (180, 675))
+
+
+    def draw_fallos(self) -> None:
+
+        pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(300, 670, 120, 30),
+                         border_radius=3)
+        fallos_text = self.font_small.render(f"Fallos: {self.fallos}", True, (255, 255, 255))
+        self.screen.blit(fallos_text, (320, 675))
+
 
     def determine_unguessed_letters(self) -> None:
         """
@@ -80,6 +104,7 @@ class Wordle7:
         for letter in self.alphabet:
             if letter not in guessed_letters:
                 self.unguessed += letter
+
 
     def determine_color(self, guess:str, j:int) -> tuple:
         """
@@ -129,6 +154,7 @@ class Wordle7:
         # Si no coincide con ninguna condición anterior, devuelve GRIS
         return (70, 70, 80)  # Gris (70, 70, 80)
     
+
     def show_modal_message(self, message:str,
                            width:int, height:int,
                            color:tuple) -> None:
@@ -166,11 +192,20 @@ class Wordle7:
 
 
     def run_game(self):
-        
+        """
+        Ejecuta el ciclo principal del juego Wordle.
+
+        Este método controla la lógica principal del juego Wordle, gestionando la pantalla,
+        la interacción del usuario y las actualizaciones de los elementos visuales.
+
+        Returns:
+            None
+        """
         while self.animating:
             self.screen.fill("white")
-            self.draw_close_button()
-
+            self.draw_close_button()  # Dibuja el botón de cierre
+            self.draw_aciertos()
+            self.draw_fallos()
             # Dibuja las letras no adivinadas en la parte superior de la pantalla
             letters = self.font_small.render(self.unguessed, False, (70, 70, 80))
             surface = letters.get_rect(center=(self.width // 2, self.t_margin // 2))
@@ -198,23 +233,28 @@ class Wordle7:
                         surface = letter.get_rect(center=(x + self.sq_size // 2, y + self.sq_size // 2))
                         self.screen.blit(letter, surface)
 
-                    x += self.sq_size + self.margin - 5
+                    x += self.sq_size + self.margin - 7
                 y += self.sq_size + self.margin + 12
 
             # Muestra la respuesta correcta si el juego termina sin éxito
             if len(self.guesses) == 6 and self.guesses[5] != self.answer:
                 self.game_over = True
                 letters = self.font.render(self.answer, False, (70, 70, 80))
-                surface = letters.get_rect(center=(self.width // 2, self.height - self.b_margin // 2 - self.margin))
+                surface = letters.get_rect(center=(self.width // 2, 600))
                 self.screen.blit(letters, surface)
+            # Si el jugador no adivina la palabra en sus intentos, se suman los fallos
+            if len(self.guesses)==6 and self.guesses[5] != self.answer and not self.game_lost:
+                self.fallos+=1
+                self.game_lost = True
 
             pygame.display.flip()
+
             # Gestiona la interacción del usuario
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.animating = False
                 elif event.type == pygame.KEYDOWN:
-
+                    # Termina el juego si se le da a la escape key
                     if event.key == pygame.K_ESCAPE:
                         self.animating = False
                     
@@ -229,7 +269,6 @@ class Wordle7:
                             if self.input_text in self.dict_guessing:
                                 # Agrega la adivinanza, actualiza letras no adivinadas y verifica si es la respuesta
                                 self.guesses.append(self.input_text)
-                                self.guesses.append(self.input_text)
                                 self.determine_unguessed_letters()
                                 self.game_over = True if self.input_text == self.answer else False
                                 # Muestra un mensaje modal si se gana el juego
@@ -237,7 +276,10 @@ class Wordle7:
                                     self.show_modal_message("¡Excelente, has ganado! Presiona espacio para reiniciar",
                                                             425, 150,
                                                             (170, 235, 160))
-                                    pygame.time.delay(2000)  # Muestra el mensaje de victoria durante 1.5 segundos
+                                    
+                                    # En cuanto gane aumento el contador de victorias
+                                    self.aciertos += 1
+                                    pygame.time.delay(1500)  # Muestra el mensaje de victoria durante 1.5 segundos
                                     self.game_over = False  # Reinicia el estado de fin del juego
                                 self.input_text = ""
                             else:
@@ -253,6 +295,7 @@ class Wordle7:
                         self.unguessed = self.alphabet
                         self.input_text = ''
                         self.answer = random.choice(list(self.dict_answers))
+                        self.game_lost = False
                         
                     # Agrega letras ingresadas por el usuario si no se ha alcanzado el límite
                     elif len(self.input_text) < 7 and not self.game_over:
